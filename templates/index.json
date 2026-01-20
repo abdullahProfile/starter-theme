@@ -1,0 +1,19 @@
+{
+  "sections":{
+    "heading": {
+      "type": "heading",
+      "settings":{}
+    },
+    "feature-collection": {
+      "type": "feature-collection",
+      "settings": {
+        "title": "Featured Products",
+        "product_count": 4
+      }
+    }
+  },
+  "order":[
+    "heading",
+    "feature-collection",
+  ],
+}

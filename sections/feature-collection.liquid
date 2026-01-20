@@ -1,0 +1,78 @@
+
+<style>
+  .featured-collection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .feature-item {
+    max-width: 350px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .feature-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+    object-fit: cover;
+  }
+
+  .feature-item h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+
+  .feature-item p {
+    font-size: 1.2em;
+    color: #555;
+  }
+</style>
+
+<div class="featured-collection">
+  {% assign collection = collections['featured-collection'] %}
+  {% for product in collection.products %}
+    <div class="feature-item">
+      <img
+        src="{{ product.featured_image | img_url: 'medium' }}"
+        alt="{{ product.title }}"
+      />
+      <h2>{{ product.title }}</h2>
+      <p>{{ product.price | money }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+
+{% schema %}
+{
+  "name": "Featured Collections",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product Image"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product Title",
+      "default": "Sample Product"
+    },
+    {
+      "type": "number",
+      "id": "product_price",
+      "label": "Product Price (in cents)",
+      "default": 1999
+    },
+  ],
+  "presets": [
+    {
+      "name": "Featured Product",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
