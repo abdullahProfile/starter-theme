@@ -1,16 +1,19 @@
 <style>
   .image-with-text {
     .container {
+      width: 100%;
       max-width: 1440px;
       display: flex;
       flex-direction: {{ section.settings.flex-direction }};
-      align-item:{{ section.settings.align-item }};
+      align-items:{{ section.settings.align-item }};
       justify-content: {{ section.settings.flex-justify }};
       gap: {{ section.settings.content-gap }}px;
     }
   }
 
+  }
   .text__image {
+    width:100%;
     max-width: 610px;
     overflow: hidden;
 
@@ -28,6 +31,27 @@
 
   .text {
     max-width: 520px;
+  }
+
+  @media (max-width:778px) {
+
+    .contianer {
+      max-width: 100%
+    }
+
+    .image-with-text {
+      flex-direction: {{ section.settings.flex-direction}};
+      max-width: 100%
+    }
+
+    .text__image {
+      max-width: 100%;
+    }
+
+    .text {
+      max-width: 100%;
+    }
+
   }
 </style>
 <section class="image-with-text">
@@ -166,7 +190,8 @@
       {"value": "flex-start", "label": "flex-start"},
       {"value": "flex-end", "label": "flex-end"}
     ]
-  }
+  },
+
  ]
 }
 {% endschema %}

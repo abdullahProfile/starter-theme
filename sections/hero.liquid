@@ -19,15 +19,14 @@
 
 .hero__text {
   position: absolute;
-  left: {{ section.settings.content_left }}px;
-  right: {{ section.settings.content_right }}px;
-  top: {{ section.settings.content_top }}px;
-  bottom:{{ section.settings.content_bottom }}px;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   background: #fff;
   padding: 16px 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-width: 500px;
+  width: 100%;
+  max-width: 550px;
 }
 
 .hero__title {
@@ -110,46 +109,6 @@
           {"value": "700", "label": "Large"},
         ]
       },
-      {
-        "type": "range",
-        "id": "content_left",
-        "label": "left",
-        "min": 30,
-        "max": 800,
-        "unit": "px",
-        "default": 100,
-        "step": 10
-      },
-      {
-        "type": "range",
-        "id": "content_right",
-        "label": "Right Offset",
-        "min": 30,
-        "max": 800,
-        "step": 10,
-        "unit": "px",
-        "default": 30
-      },
-      {
-        "type": "range",
-        "id": "content_top",
-        "label": "Top",
-        "min": 100,
-        "max": 800,
-        "unit": "px",
-        "default": 130,
-        "step": 10
-      },
-      {
-        "type": "range",
-        "id": "content_bottom",
-        "label": "Bottom Offset",
-        "min": 50,
-        "max": 800,
-        "step": 10,
-        "unit": "px",
-        "default": 50
-      }
     ],
     "presets": [
       {

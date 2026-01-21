@@ -4,24 +4,36 @@
     display: grid;
     grid-template-columns: repeat(3,1fr);
     gap: 16px;
+    padding-inline: {{ section.settings.section-padding__inline }}px;
+
+    @media (max-width: 992px) {
+      grid-template-columns: repeat({{ section.settings.grid-column }}, 1fr);
+      place-items: {{ section.settings.grid-place-item }};
+    }
   }
 
   .feature-item {
     max-width: 350px;
     border-radius: 16px;
     overflow: hidden;
+
+    @media (max-width:992px) {
+      width: 100%;
+    }
   }
 
   .feature-item img {
-    width: 100%;
+    max-width: 100%
     height: auto;
     display: block;
     margin-bottom: 10px;
     object-fit: cover;
+    border-radius: 10px;
   }
 
-  .feature-item h2 {
-    font-size: 1.5em;
+  .collections_title {
+    font-size: {{ section.settings.title-font_size }}rem;
+    color: {{ section.settings.title-text__color }}
     margin-bottom: 10px;
   }
 
@@ -33,15 +45,19 @@
 
 <div class="featured-collection">
   {% if section.settings.featured_collection != blank %}
+
     {% for product in section.settings.featured_collection.products %}
+
+      {% if product.compare_at_price > 300 %}
       <div class="feature-item">
         <img
           src="{{ product.featured_image | img_url: 'medium' }}"
           alt="{{ product.title }}"
         />
-        <h2>{{ product.title }}</h2>
+        <h2 class="collections_title">{{product.title}}</h2>
         <p>{{ product.price | money }}</p>
       </div>
+      {% endif %}
     {% endfor %}
   {% endif %}
 </div>
@@ -54,6 +70,61 @@
       "type": "collection",
       "id": "featured_collection",
       "label": "Select collection"
+    },
+
+    {
+      "type": "range",
+      "label": "padding inline",
+      "id": "section-padding__inline",
+      "min": 20,
+      "max": 40,
+      "step": 4,
+      "default": 20,
+    },
+
+    {
+      "type": "select",
+      "label": "grid column on mobile",
+      "id": "grid-column",
+
+      "options": [
+        {"value": "2", "label": "two"},
+        {"value": "1", "label": "one"}
+      ]
+    },
+
+    {
+      "type": "select",
+      "label": "place-item on mobile",
+      "id": "grid-place-item",
+
+      "options": [
+        {"value": "center", "label": "center"},
+        {"value": "baseline", "label": "baseline"},
+        {"value": "end", "label": "end"}
+      ]
+    },
+
+    {
+      "type": "range",
+      "label": "title font size",
+      "id": "title-font_size",
+      "min": 1.2,
+      "max": 2.2,
+      "step": 0.1,
+      "default": 1.1,
+      "unit": "rem"
+    },
+
+    {
+      "type": "select",
+      "label": "title color",
+      "id": "title-text__color",
+
+      "options": [
+        {"value": "black", "label": "black"},
+        {"value": "gray", "label": "gray"},
+      ]
     }
   ],
   "presets": [
