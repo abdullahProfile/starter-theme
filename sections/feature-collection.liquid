@@ -2,10 +2,10 @@
 <style>
   .featured-collection {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(4,1fr);
     gap: 16px;
     padding-inline: {{ section.settings.section-padding__inline }}px;
-
+    margin-block: 1rem;
     @media (max-width: 992px) {
       grid-template-columns: repeat({{ section.settings.grid-column }}, 1fr);
       place-items: {{ section.settings.grid-place-item }};
@@ -16,30 +16,44 @@
     max-width: 350px;
     border-radius: 16px;
     overflow: hidden;
-
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
     @media (max-width:992px) {
       width: 100%;
     }
   }
 
   .feature-item img {
-    max-width: 100%
+    max-width: 100%;
     height: auto;
     display: block;
-    margin-bottom: 10px;
+    width: 100%;
     object-fit: cover;
     border-radius: 10px;
   }
 
   .collections_title {
     font-size: {{ section.settings.title-font_size }}rem;
-    color: {{ section.settings.title-text__color }}
-    margin-bottom: 10px;
+    color: {{ section.settings.title-text__color }};
+    margin: 0;
   }
 
   .feature-item p {
     font-size: 1.2em;
     color: #555;
+    margin: 0;
+  }
+
+  .product_button {
+    background: #000;
+    padding: 1rem;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 0;
   }
 </style>
 
@@ -48,7 +62,6 @@
 
     {% for product in section.settings.featured_collection.products %}
 
-      {% if product.compare_at_price > 300 %}
       <div class="feature-item">
         <img
           src="{{ product.featured_image | img_url: 'medium' }}"
@@ -56,11 +69,12 @@
         />
         <h2 class="collections_title">{{product.title}}</h2>
         <p>{{ product.price | money }}</p>
+
+        <a href="{{collection_product.url }}" class="product_button">View Product</a>
       </div>
-      {% endif %}
     {% endfor %}
-  {% endif %}
-</div>
+    {% endif %}
+  </div>
 
 {% schema %}
 {
