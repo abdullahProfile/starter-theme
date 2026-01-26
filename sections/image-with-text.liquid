@@ -1,6 +1,6 @@
 <style>
-  .image-with-text {
-    .container {
+
+  .image-with-text__container {
       width: 100%;
       max-width: 1440px;
       display: flex;
@@ -8,13 +8,11 @@
       align-items:{{ section.settings.align-item }};
       justify-content: {{ section.settings.flex-justify }};
       gap: {{ section.settings.content-gap }}px;
-    }
   }
 
-  }
   .text__image {
     width:100%;
-    max-width: 610px;
+    max-width: 38.125rem;
     overflow: hidden;
 
     img {
@@ -24,24 +22,20 @@
   }
 
   .text__title {
-    font-size: {{ section.settings.title-font-size }}px;
+    font-size: {{ section.settings.title-font-size }}rem;
     font-weight: {{ section.settings.title-font-weight }};
     margin-bottom: 16px;
   }
 
   .text {
-    max-width: 520px;
+    max-width: 32.5rem;
   }
 
-  @media (max-width:778px) {
+  @media (max-width:48.625rem) {
 
-    .contianer {
-      max-width: 100%
-    }
-
-    .image-with-text {
-      flex-direction: {{ section.settings.flex-direction}};
-      max-width: 100%
+    .image-with-text__container {
+      max-width: 100%;
+      flex-direction: {{ section.settings.flex-direction__mbl}};
     }
 
     .text__image {
@@ -55,18 +49,39 @@
   }
 </style>
 <section class="image-with-text">
-  <div class="container">
+  <div class="image-with-text__container">
+
     <div class="text">
       <h3 class="text__title">{{ section.settings.title }}</h3>
-
       <p>{{ section.settings.description }}</p>
     </div>
 
     <div class="text__image">
       <img src="{{ section.settings.text-image | image_url: width: 610 }}" alt="{{ product.title }}" />
     </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="text__blocks">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text_block' %}
+              <div class="block block--text">
+                <p>{{ block.settings.block_text }}</p>
+              </div>
+
+            {% when 'image_block' %}
+              <div class="block block--image">
+                <img src="{{ block.settings.block_image | image_url: 'medium' }}" alt="">
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
   </div>
 </section>
+
+
 {% schema %}
 {
  "name": "image with text",
@@ -103,11 +118,11 @@
     "type": "range",
     "label": "title font size",
     "id": "title-font-size",
-    "min": 16,
-    "max": 40,
-    "step": 4,
-    "default": 16,
-    "unit": "px"
+    "min": 1,
+    "max": 4,
+    "step": 1,
+    "default": 1,
+    "unit": "rem"
   },
 
   {
@@ -192,6 +207,40 @@
     ]
   },
 
- ]
+  {
+    "type": "select",
+    "label": "flex Direction mobile",
+    "id": "flex-direction__mbl",
+
+    "options": [
+      {"value": "row", "label": "row"},
+      {"value": "column", "label": "column"},
+      {"value": "row-reverse", "label": "row reverse"},
+      {"value": "column-reverse","label": "column reverse"}
+    ]
+   },
+ ],
+
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "block_text",
+          "label": "Block Text",
+          "default": "This is a block text"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Image with Text",
+      "category": "Custom"
+    }
+  ]
 }
 {% endschema %}
