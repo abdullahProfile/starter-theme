@@ -1,5 +1,5 @@
 <style>
-  .section-{{ section.id }} {
+  .image-with-text-{{ section.id }} {
     --flex-direction: {{ section.settings.flex_direction }};
     --flex-direction-mobile: {{ section.settings.flex_direction_mobile }};
     --align-items: {{ section.settings.align_items }};
@@ -12,37 +12,6 @@
     --image-mbl-width: {{ section.settings.image_width_mbl }}%;
     --content-width: {{ section.settings.text_content_width }}px;
     --section-mb-mobile: {{ section.settings.section_margin_block_mobile }}px;
-  }
-  .section-{{ section.id }} .container {
-    display: flex;
-    flex-direction: var(--flex-direction);
-    align-items: var(--align-items);
-    justify-content: var(--justify-content);
-    gap: var(--gap);
-    margin-inline: 0;
-    margin-block: var(--section-margin-block);
-  }
-
-  .section-{{ section.id }} .image {
-    width: 100%;
-    max-width: var(--image-width);
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  .section-{{ section.id }} .image img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: var(--image-fit);
-    border-radius: var(--image-radius);
-  }
-
-  .section-{{ section.id }} .content {
-    max-width: var(--content-width);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
   }
 
   {% for block in section.blocks %}
@@ -111,19 +80,19 @@
 
 
   @media (max-width: 768px) {
-    .section-{{ section.id }} {
+    .image-with-text-{{ section.id }} {
       margin-block: var(--section-mb-mobile);
     }
 
-  .section-{{ section.id }} .container {
+  .image-with-text-{{ section.id }} .container {
     flex-direction: var(--flex-direction-mobile);
   }
 
-  .section-{{ section.id }} .image {
+  .image-with-text-{{ section.id }} .image {
     max-width: var(--img-mbl-width);
   }
 
-  .section-{{ section.id }} .content {
+  .image-with-text-{{ section.id }} .content {
 
     {% if section.settings.text_align_mobile == true %}
       align-items: center;
@@ -159,8 +128,42 @@
 }
 </style>
 
+{% stylesheet %}
+  .container {
+    display: flex;
+    flex-direction: var(--flex-direction);
+    align-items: var(--align-items);
+    justify-content: var(--justify-content);
+    gap: var(--gap);
+    margin-inline: 0;
+    margin-block: var(--section-margin-block);
+  }
 
-<section class="section section-{{ section.id }}">
+  .image {
+    width: 100%;
+    max-width: var(--image-width);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: var(--image-fit);
+    border-radius: var(--image-radius);
+  }
+
+  .content {
+    max-width: var(--content-width);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+{% endstylesheet %}
+
+<section class="image-with-text image-with-text-{{ section.id }}">
   <div class="container">
 
     <div class="image">
