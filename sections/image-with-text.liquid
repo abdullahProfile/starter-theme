@@ -1,5 +1,5 @@
 <style>
-  .image-with-text-{{ section.id }} {
+  #image-with-text-{{ section.id }} {
     --flex-direction: {{ section.settings.flex_direction }};
     --flex-direction-mobile: {{ section.settings.flex_direction_mobile }};
     --justify-content: {{ section.settings.justify_content }};
@@ -30,7 +30,7 @@
   }
 
   {% if section.settings.ishover %}
-    .image-with-text-{{ section.id }} .button:hover {
+    #image-with-text-{{ section.id }} .button:hover {
       background-color: {{ section.settings.button_hover_bg }};
       color: {{ section.settings.button_hover_text_color }};
     }
@@ -40,7 +40,7 @@
 
 {% stylesheet %}
 
-  .container {
+  .image-with-text {
     display: flex;
     flex-direction: var(--flex-direction);
     justify-content: var(--justify-content);
@@ -107,7 +107,7 @@
   }
 
   @media (max-width: 768px) {
-    .container {
+    .ima {
       flex-direction: var(--flex-direction-mobile);
     }
 
@@ -123,50 +123,47 @@
 
 {% endstylesheet %}
 
-<section class="image-with-text-{{ section.id }}">
-  <div class="container">
-
-    <div class="image">
-      {% if section.settings.image != blank %}
-        {{ section.settings.image | image_url: width: 800 | image_tag }}
-      {% else %}
-        <div class="placeholder">
-          {{ 'image' | placeholder_svg_tag: 'placeholder' }}
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="content">
-      {% for block in section.blocks %}
-        {% case block.type %}
-          {% when 'heading' %}
-            <h1 class="heading heading-{{ block.id }}" {{ block.shopify_attributes }}>
-              {{ block.settings.heading }}
-            </h1>
-
-          {% when 'text' %}
-            <p class="description" {{ block.shopify_attributes }}>
-              {{ block.settings.description }}
-            </p>
-
-          {% when 'button' %}
-            {% if block.settings.button_text != blank %}
-              <style>
-                .button-{{ block.id }} {
-                  --button-background: {{ block.settings.button_background }};
-                }
-              </style>
-              <div class="button-container button-{{ block.id }}" {{ block.shopify_attributes }}>
-                <a href="{{ block.settings.button_link }}" class="button">
-                  {{ block.settings.button_text }}
-                </a>
-              </div>
-            {% endif %}
-        {% endcase %}
-      {% endfor %}
-    </div>
+<div id="image-with-text-{{ section.id }}" class="image-with-text">
+  <div class="image">
+    {% if section.settings.image != blank %}
+      {{ section.settings.image | image_url: width: 800 | image_tag }}
+    {% else %}
+      <div class="placeholder">
+        {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+      </div>
+    {% endif %}
   </div>
-</section>
+
+  <div class="content">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'heading' %}
+          <h1 class="heading heading-{{ block.id }}" {{ block.shopify_attributes }}>
+            {{ block.settings.heading }}
+          </h1>
+
+        {% when 'text' %}
+          <p class="description" {{ block.shopify_attributes }}>
+            {{ block.settings.description }}
+          </p>
+
+        {% when 'button' %}
+          {% if block.settings.button_text != blank %}
+            <style>
+              .button-{{ block.id }} {
+                --button-background: {{ block.settings.button_background }};
+              }
+            </style>
+            <div class="button-container button-{{ block.id }}" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.button_link }}" class="button">
+                {{ block.settings.button_text }}
+              </a>
+            </div>
+          {% endif %}
+      {% endcase %}
+    {% endfor %}
+  </div>
+</div>
 
 {% schema %}
 
@@ -239,18 +236,18 @@
       {
         "type": "range",
         "id": "section_margin_block",
-        "label": "Section Margin Block",
+        "label": "Section Above & Below Spacing",
         "min": 0,
         "max": 200,
         "step": 10,
         "unit": "px",
-        "default": 0
+        "default": 100
       },
 
       {
         "type": "range",
         "id": "section_margin_block_mobile",
-        "label": "Section Margin Block Mobile",
+        "label": "Section Above & Below Spacing Mobile",
         "min": 0,
         "max": 200,
         "step": 10,

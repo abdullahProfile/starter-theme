@@ -1,49 +1,97 @@
 <style>
-.header-{{ section.id }} {
-  --align-items: {{ section.settings.align_items }};
-  --logo-width: {{ section.settings.logo_width }}px;
-  --logo-alignment: {{ section.settings.logo_alignment }};
-  --color-primary: #161C2D;
-  --bg-color-primary: #68D585;
-  --bg-color-secondary: #473BF0;
-}
-
-.header-{{ section.id }} .container {
-  display: flex;
-  padding: {{ section.settings.padding_inline }}px {{ section.settings.padding_block }}px;
-  align-items: var(--align-items);
-  background: var(--bg-color-primary);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.header-{{ section.id }} .logo{
-  width: var(--logo-width);
-  align-self: var(--logo-alignment);
-}
+  #header-{{ section.id }}{
+    --background: {{ section.settings.background }};
+    --align-items: {{ section.settings.align_items }};
+    --justiy-item: {{section.settings.jusity_item }};
+    --logo-width: {{ section.settings.logo_width }}px;
+    --logo-alignment: {{ section.settings.logo_alignment }};
+    --padding: {{ section.settings.padding_inline }}px {{ section.settings.padding_block }}px;
+    --menu-font-size: {{ section.settings.menu_font_size }}px;
+    --menu-font-color: {{ section.settings.menu_font_color }};
+    --menu-font-weight: {{ section.settings.menu_font_weight }};
+  }
 </style>
 
-<header class="header-{{ section.id }}">
-  <div class="container">
-    <div class="logo" >
-      {% if theme.settings.logo !=blank %}
-        <a href="{{ section.settings.logo_url }}" class="logo_link"><img src="{{ theme.settings.logo }}"></a>
-        {% endif %}
+{% stylesheet %}
+ .header {
+    display: flex;
+    padding: var(--padding);
+    align-items: var(--align-items);
+    background: var(--background);
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+ }
+
+ .header-column {
+    flex: 1;
+    display: flex;
+    align-items: center;
+ }
+
+ .column-logo { justify-content: center; }
+ .column-utils { justify-content: flex-end; gap: 15px; }
+ .column-nav { justify-content: flex-start; }
+
+ .layout-left .column-logo { order: 1; justify-content: flex-start; }
+ .layout-left .column-nav { order: 2; margin-left: 20px; }
+ .layout-left .column-utils { order: 3; }
+
+ .header-menu {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+ }
+
+ .menu-item {
+    text-decoration: none;
+    font-size: var(--menu-font-size);
+    color: var(--menu-font-color);
+    font-weight: var(--menu-font-weight);
+ }
+{% endstylesheet %}
+
+ <div id="header-{{ section.id }}" class="header layout-{{ section.settings.logo_position }}">
+
+    <nav class="header-column column-nav">
+      <ul class="header-menu">
+        {% for block in section.blocks %}
+          <li {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.menu_url }}" class="menu-item">{{ block.settings.menu_label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="header-column column-logo">
+      <div class="logo">
+        {%- if settings.logo != blank -%}
+          <a href="{{ section.settings.logo_url | default: '/' }}" class="logo_link">
+            {{ settings.logo | image_url: width: section.settings.logo_width | image_tag: class: 'header-logo' }}
+          </a>
+        {%- else -%}
+          <a href="/" class="logo_text">{{ shop.name }}</a>
+        {%- endif -%}
+      </div>
     </div>
 
-    <ul>
-      <li><a href="#">{{  }}</a></li>
-    </ul>
-  </div>
-</header>
+    <div class="header-column column-utils">
+      {% if shop.customer_accounts_enabled %}
+        {% if customer %}
+          <a href="{{ routes.account_url }}" class="menu-item">Account</a>
+        {% else %}
+          <a href="{{ routes.account_login_url }}" class="menu-item">Login</a>
+          <a href="{{ routes.account_register_url }}" class="menu-item">Sign Up</a>
+        {% endif %}
+      {% endif %}
+    </div>
 
+  </div>
 {% schema %}
 {
-  "name": "header",
+  "name": "Header",
   "tag": "header",
-  "class": "header",
-
+  "class": "header-section",
   "settings": [
     {
       "type": "header",
@@ -51,25 +99,54 @@
     },
 
     {
+      "type": "url",
+      "id": "logo_url",
+      "label": "Logo Link",
+      "default": "/"
+    },
+
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "Logo Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+
+    {
       "type": "range",
       "id": "padding_inline",
       "label": "Header Padding Inline",
-      "min": 20,
+      "min": 0,
       "max": 100,
       "step": 10,
       "unit": "px",
-      "default": 20
+      "default": 10
     },
 
     {
       "type": "range",
       "id": "padding_block",
       "label": "Header Padding Block",
-      "min": 20,
+      "min": 0,
       "max": 100,
       "step": 10,
       "unit": "px",
-      "default": 20
+      "default": 10
     },
 
     {
@@ -79,62 +156,145 @@
 
       "options": [
         { "value": "center", "label": "Center" },
-        { "value": "start", "label": "Start" },
-        { "value": "end", "label": "End" },
-        {"value": "stretch", "label": "stretch"}
+        { "value": "flex-start", "label": "Start" },
+        { "value": "flex-end", "label": "End" }
       ],
-
       "default": "center"
     },
 
     {
-      "type": "header",
-      "content": "Logo Setting"
-    },
+      "type": "select",
+      "id": "jusity_item",
+      "label": "Place Item",
 
-    {
-      "type": "url",
-      "id": "logo_url",
-      "label": "Logo Link"
-    },
+      "options": [
+        {
+          "value": "space-between",
+          "label": "Space between"
+        },
 
-    {
-      "type": "range",
-      "id": "logo_width",
-      "label": "Logo Width",
-      "min": 178,
-      "max": 240,
-      "step": 2,
-      "unit": "px",
-      "default": 178
+        {
+          "value": "space-around",
+          "label": "space Around"
+        },
+
+        {
+          "value": "space-evenly",
+          "label": "space-evenly"
+        },
+
+        {
+          "value": "center",
+          "label": "center"
+        },
+      ],
+
+      "default":"space-around"
     },
 
     {
       "type": "select",
       "id": "logo_alignment",
       "label": "Logo Alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "flex-start"
+    },
+
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Header Background Color",
+      "default": "#68D5851A"
+    },
+
+    {
+      "type": "header",
+      "content": "Link Settings"
+    },
+
+    {
+      "type": "range",
+      "id": "menu_font_size",
+      "label": "Menu Text Size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+
+    {
+      "type": "color",
+      "id": "menu_font_color",
+      "label": "Menu Text Color",
+      "default": "#161C2D"
+    },
+
+    {
+      "type": "select",
+      "id": "menu_font_weight",
+      "label": "Menu Text Weight",
 
       "options": [
         {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
+          "value": "400", "label": "Normal"
         },
 
-      ]
+        {
+          "value": "600", "label": "Medium"
+        },
+
+        {
+          "value": "900", "label": "Large"
+        },
+      ],
+      "default": "400",
     },
   ],
 
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Menu Label",
+          "default": "Home"
+        },
+        {
+          "type": "url",
+          "id": "menu_url",
+          "label": "Menu URL",
+          "default": "/"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Header"
+      "name": "Header",
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {
+            "menu_label": "Home",
+            "menu_url": "/"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "menu_label": "Shop",
+            "menu_url": "/collections/all"
+          }
+        }
+      ]
     }
   ]
 }
