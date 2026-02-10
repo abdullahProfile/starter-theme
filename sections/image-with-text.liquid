@@ -1,9 +1,11 @@
 <style>
   #image-with-text-{{ section.id }} {
+    --max-width: {{ settings.page_width }}px;
     --flex-direction: {{ section.settings.flex_direction }};
     --flex-direction-mobile: {{ section.settings.flex_direction_mobile }};
     --justify-content: {{ section.settings.justify_content }};
     --gap: {{ section.settings.gap }}px;
+    --gap_mobile: {{ section.settings.gap_mobile }}px;
     --section-margin-block: {{ section.settings.section_margin_block }}px;
     --image-width: {{ section.settings.image_width }}px;
     --image-radius: {{ section.settings.image_border_radius }}px;
@@ -23,7 +25,8 @@
     --button-border-radius: {{ section.settings.button_border_radius }}px;
     --button-text-decoration: {{ section.settings.button_text_decoration }};
     --button-width: {{ section.settings.button_width }}px;
-
+    --heading_size_mobile: {{ section.settings.heading_size_mobile }}px;
+    --description_font_size_mobile: {{ section.settings.description_font_size_mobile }}px;
     --button-justify: {% if section.settings.button_alignment == 'center' %}center{% elsif section.settings.button_alignment == 'left' %}flex-start{% else %}flex-end{% endif %};
     --mobile-align-items: {% if section.settings.text_align_mobile %}center{% else %}flex-start{% endif %};
     --mobile-text-align: {% if section.settings.text_align_mobile %}center{% else %}left{% endif %};
@@ -39,14 +42,14 @@
 </style>
 
 {% stylesheet %}
-
   .image-with-text {
     display: flex;
     flex-direction: var(--flex-direction);
     justify-content: var(--justify-content);
     gap: var(--gap);
-    align-items: stretch;
     margin-block: var(--section-margin-block);
+    max-width: var(--max-width);
+    align-items: stretch;
   }
 
   .image {
@@ -106,9 +109,11 @@
     justify-content: var(--button-justify);
   }
 
-  @media (max-width: 768px) {
-    .ima {
+  @media (max-width: 960px) {
+    .image-with-text {
       flex-direction: var(--flex-direction-mobile);
+      gap: var(--gap_mobile);
+      margin-block: var(--section-mb-mobile);
     }
 
     .image {
@@ -121,9 +126,16 @@
     }
   }
 
+  .heading {
+    font-size: var(--heading_size_mobile);
+  }
+
+  .description {
+    font-size: var(--description_font_size_mobile);
+  }
 {% endstylesheet %}
 
-<div id="image-with-text-{{ section.id }}" class="image-with-text">
+<div id="image-with-text-{{ section.id }}" class="image-with-text width">
   <div class="image">
     {% if section.settings.image != blank %}
       {{ section.settings.image | image_url: width: 800 | image_tag }}
@@ -236,57 +248,71 @@
       {
         "type": "range",
         "id": "section_margin_block",
-        "label": "Section Above & Below Spacing",
+        "label": "Desktop vertical spacing",
         "min": 0,
         "max": 200,
         "step": 10,
         "unit": "px",
-        "default": 100
+        "default": 100,
+        "info": "Controls the whitespace above and below the section on desktop."
       },
 
       {
         "type": "range",
         "id": "section_margin_block_mobile",
-        "label": "Section Above & Below Spacing Mobile",
+        "label": "Mobile vertical spacing",
         "min": 0,
-        "max": 200,
-        "step": 10,
+        "max": 100,
+        "step": 5,
         "unit": "px",
-        "default": 0
+        "default": 20,
+        "info": "Adjusts the space above and below this section on mobile devices."
       },
 
       {
         "type": "select",
         "id": "flex_direction",
-        "label": "Flex Direction",
-
+        "label": "Desktop layout orientation",
         "options": [
-          { "value": "row", "label": "Row" },
-          { "value": "column", "label": "Column" },
-          { "value": "row-reverse", "label": "Row Reverse" },
-          { "value": "column-reverse", "label": "Column Reverse" }
+          { "value": "row", "label": "Horizontal (Standard)" },
+          { "value": "row-reverse", "label": "Horizontal (Reversed)" },
+          { "value": "column", "label": "Vertical (Top to Bottom)" },
+          { "value": "column-reverse", "label": "Vertical (Bottom to Top)" }
         ],
-        "default": "row"
+        "default": "row",
+        "info": "Switch between side-by-side or stacked layouts."
       },
 
       {
         "type": "select",
         "id": "justify_content",
-        "label": "Justify Content",
+        "label": "Content spacing",
 
         "options": [
-          { "value": "center", "label": "Center" },
-          { "value": "space-between", "label": "Space Between" },
-          { "value": "space-evenly", "label": "Space Evenly" },
-          { "value": "space-around", "label": "Space Around" }
+          { "value": "center", "label": "Centered" },
+          { "value": "space-between", "label": "Spread to edges" },
+          { "value": "space-evenly", "label": "Equal gaps" },
+          { "value": "space-around", "label": "Gaps with side padding" }
         ],
-        "default": "center"
+        "default": "center",
+        "info": "Choose how items are spread across the header width."
       },
 
       {
         "type": "range",
         "id": "gap",
-        "label": "Gap Between Items",
+        "label": "Space Between Items",
+        "min": 10,
+        "max": 80,
+        "step": 5,
+        "unit": "px",
+        "default": 10
+      },
+
+      {
+        "type": "range",
+        "id": "gap_mobile",
+        "label": "Space Between Items Mobile",
         "min": 10,
         "max": 80,
         "step": 5,
@@ -297,7 +323,7 @@
       {
         "type": "select",
         "id": "flex_direction_mobile",
-        "label": "Flex Direction on Mobile",
+        "label": "Flex Direction Mobile",
 
         "options": [
           { "value": "row", "label": "Row" },
@@ -316,7 +342,7 @@
       {
         "type": "range",
         "id": "heading_size",
-        "label": "Heading Font Size",
+        "label": "Heading Text Size",
         "min": 16,
         "max": 64,
         "step": 2,
@@ -327,7 +353,7 @@
       {
         "type": "range",
         "id": "heading_size_mobile",
-        "label": "Heading Font Size Mobile",
+        "label": "Heading Text Size Mobile",
         "min": 14,
         "max": 64,
         "step": 2,
@@ -338,14 +364,14 @@
       {
         "type": "color",
         "id": "heading_font_color",
-        "label": "Heading Font Color",
+        "label": "Heading Text Color",
         "default": "#000"
       },
 
       {
         "type": "select",
         "id": "heading_font_weight",
-        "label": "Heading Font Weight",
+        "label": "Heading Text Weight",
 
         "options": [
           { "value": "400", "label": "Regular" },
@@ -364,7 +390,7 @@
       {
         "type": "range",
         "id": "description_font_size",
-        "label": "Description Font Size",
+        "label": "Description Text Size",
         "min": 14,
         "max": 48,
         "step": 2,
@@ -375,7 +401,7 @@
       {
         "type": "range",
         "id": "description_font_size_mobile",
-        "label": "Description Font Size Mobile",
+        "label": "Description Text Size Mobile",
         "min": 12,
         "max": 48,
         "step": 2,

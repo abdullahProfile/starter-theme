@@ -7,6 +7,7 @@
     --font-color: {{ section.settings.font_color }};
     --text-decoration: {{ section.settings.text_decoration }};
     --padding: {{ section.settings.padding_block }}px {{ section.settings.padding_inline }}px;
+    --max-width: {{ settings.page_width }}px;
   }
 
   #announcement-{{ section.id }} .link {
@@ -48,9 +49,7 @@
     align-items: var(--align-items);
     justify-content: var(--align-items);
     padding: var(--padding);
-    width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
+    max-width: var(--max-width);
     display: flex;
     overflow: hidden;
   }
@@ -64,7 +63,7 @@
 
 {% endstylesheet %}
 
-  <div id="announcement-{{ section.id }}" class="announcement-wrapper">
+  <div id="announcement-{{ section.id }}" class="announcement-wrapper width">
     {% if section.settings.link_text != blank %}
       <a href="{{ section.settings.link }}" class="link">
         {{ section.settings.link_text }}

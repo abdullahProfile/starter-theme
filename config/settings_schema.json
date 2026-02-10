@@ -11,9 +11,14 @@
     "name":"theme Settings",
     "settings":[
       {
-        "type":"image_picker",
-        "label":"Logo",
-        "id":"logo"
+        "type":"range",
+        "id":"page_width",
+        "label":"Page Width",
+        "min": 800,
+        "max": 1600,
+        "step": 50,
+        "unit": "px",
+        "default": 1200
       }
     ]
   }
