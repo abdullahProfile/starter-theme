@@ -25,8 +25,8 @@
     --button-border-radius: {{ section.settings.button_border_radius }}px;
     --button-text-decoration: {{ section.settings.button_text_decoration }};
     --button-width: {{ section.settings.button_width }}px;
-    --heading_size_mobile: {{ section.settings.heading_size_mobile }}px;
-    --description_font_size_mobile: {{ section.settings.description_font_size_mobile }}px;
+    --heading-size-mobile: {{ section.settings.heading_size_mobile }}px;
+    --description-font-size-mobile: {{ section.settings.description_font_size_mobile }}px;
     --button-justify: {% if section.settings.button_alignment == 'center' %}center{% elsif section.settings.button_alignment == 'left' %}flex-start{% else %}flex-end{% endif %};
     --mobile-align-items: {% if section.settings.text_align_mobile %}center{% else %}flex-start{% endif %};
     --mobile-text-align: {% if section.settings.text_align_mobile %}center{% else %}left{% endif %};
@@ -124,14 +124,14 @@
       align-items: var(--mobile-align-items);
       text-align: var(--mobile-text-align);
     }
-  }
 
-  .heading {
-    font-size: var(--heading_size_mobile);
-  }
+    .heading {
+      font-size: var(--heading-size-mobile);
+    }
 
-  .description {
-    font-size: var(--description_font_size_mobile);
+    .description {
+      font-size: var(--description-font-size-mobile);
+    }
   }
 {% endstylesheet %}
 
